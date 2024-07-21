@@ -15,7 +15,7 @@ final injector = AutoInjector(on: (i) {
   // services
   i.addSingleton<Uno>(Uno.new);
   i.addSingleton<IHttpClient>(UnoHttpClient.new);
-  i.addSingleton<SharedPreferencesService>(SharedPreferencesService.new);
+  i.addSingleton<ISharedPreferencesService>(SharedPreferencesService.new);
 
   // repositories
   i.add<IHomeRepository>(HomeRepository.new);

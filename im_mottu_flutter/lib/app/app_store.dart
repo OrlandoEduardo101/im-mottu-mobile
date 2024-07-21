@@ -38,5 +38,6 @@ class AppStore extends GetxController {
 
   void cancelConnectivitySubscription() {
     _subscription.cancel();
+    
   }
 }
