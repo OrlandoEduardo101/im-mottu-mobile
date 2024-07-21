@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:im_mottu_flutter/app/injector.dart';
 
+import 'app_store.dart';
 import 'modules/home/interactor/stores/home_store.dart';
 import 'modules/home/presentation/home_page.dart';
 import 'modules/splash/splash_page.dart';
@@ -24,6 +25,7 @@ class Routers {
         builder: (context, state) {
           return HomePage(
             homeStore: injector.get<HomeStore>(),
+            appStore: injector.get<AppStore>(),
           );
         },
       ),

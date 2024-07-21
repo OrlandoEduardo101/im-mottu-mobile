@@ -37,7 +37,7 @@ class _AppWidgetState extends State<AppWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Color selectedColor = const Color.fromARGB(255, 196, 26, 26);
+    Color selectedColor = const Color(0xff33ff00);
     Brightness selectedBrightness = Brightness.light;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
