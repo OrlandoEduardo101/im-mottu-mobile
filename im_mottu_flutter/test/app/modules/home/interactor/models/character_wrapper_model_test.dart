@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:im_mottu_flutter/app/modules/home/interactor/models/character_wrapper_model.dart';
 
