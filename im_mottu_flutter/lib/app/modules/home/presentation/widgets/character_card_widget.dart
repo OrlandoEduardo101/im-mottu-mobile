@@ -18,7 +18,7 @@ class CharacterCardWidget extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: colorScheme.primaryContainer.withOpacity(0.5),
+          color: colorScheme.secondaryFixed.withOpacity(0.5),
           borderRadius: BorderRadius.circular(16),
         ),
         alignment: Alignment.center,
