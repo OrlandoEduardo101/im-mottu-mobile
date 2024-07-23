@@ -10,7 +10,7 @@ class AppState {
     required this.hasConnection,
   });
 
-  static AppState empty() => AppState(themeState: ThemeAppState.initState(), hasConnection: false);
+  static AppState empty() => AppState(themeState: ThemeAppState.initState(), hasConnection: true);
 
   AppState copyWith({
     ThemeAppState? themeState,
