@@ -6,6 +6,7 @@ import 'package:im_mottu_flutter/app/shared/services/theme/theme_app_state.dart'
 import 'package:im_mottu_flutter/app/shared/widgets/bottom_sheet/bottom_sheet_service.dart';
 import 'package:im_mottu_flutter/app/shared/widgets/img/marvel_logo.dart';
 
+import '../../../shared/constants/constants.dart';
 import '../../../shared/widgets/buttons/switch_theme_mode.dart';
 import '../../../shared/widgets/text_input/custom_search_field.dart';
 import '../interactor/stores/home_store.dart';
@@ -55,9 +56,13 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: MarvelLogo(
-          width: size.width * 0.35,
-          colorFilter: colorScheme.onPrimary,
+        title: Hero(
+          transitionOnUserGestures: true,
+          tag: kMarvelLogoHeroTag,
+          child: MarvelLogo(
+            width: size.width * 0.35,
+            colorFilter: colorScheme.onPrimary,
+          ),
         ),
         actions: [
           SwitchThemeMode(
