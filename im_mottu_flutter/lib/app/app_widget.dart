@@ -50,7 +50,7 @@ class _AppWidgetState extends State<AppWidget> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    Color selectedColor = const Color.fromARGB(255, 255, 0, 0);
+    Color selectedColor = const Color.fromARGB(198, 167, 33, 33);
     Brightness selectedBrightness = Brightness.light;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -75,6 +75,7 @@ class _AppWidgetState extends State<AppWidget> with WidgetsBindingObserver {
               data: ThemeData(
                   colorScheme: ColorScheme.fromSeed(
                 seedColor: selectedColor,
+                primary: selectedColor,
                 brightness:
                     controller.state.themeState.theme == ThemeEnum.lightTheme ? Brightness.light : Brightness.dark,
               )),
