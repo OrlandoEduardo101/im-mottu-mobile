@@ -11,7 +11,9 @@
 - [x] Showing character detail
 
 # Demonstration
-[![](https://markdown-videos-api.jorgenkh.no/youtube/gkrbwZFgiVY)]([https://youtu.be/dQw4w9WgXcQ](https://youtu.be/gkrbwZFgiVY))
+
+https://github.com/user-attachments/assets/813a58ae-4056-4179-84a8-131d1f1cee70
+
 
 
 # 🛵 I'm Mottu Mobile 🛵
