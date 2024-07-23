@@ -1,3 +1,14 @@
+# Features 
+- [ ] Firebase crash analytics
+- [x] [clear cache when detached app](https://github.com/OrlandoEduardo101/im-mottu-mobile/commit/dfa23e4eb11a0f63982e5b538825d34b9fa997e0)
+- [x] [Add pagination infinity list and filter with name in api](https://github.com/OrlandoEduardo101/im-mottu-mobile/commit/93fcb1402f2c66063545d270e0361493718d2b5c)
+- [x] [add check connectivity with subscription and platform channel](https://github.com/OrlandoEduardo101/im-mottu-mobile/commit/2042b269030ff8bedeba55eb0fc3020138b8b7cb)
+- [x] [add cache in a character request with shared preferences](https://github.com/OrlandoEduardo101/im-mottu-mobile/commit/2cfc8f9e2874dac9daf161dc3b06c923c12a1ee4)
+- [x] [Add filter text](https://github.com/OrlandoEduardo101/im-mottu-mobile/commit/19605ea28af8974a4fe7f42d5dfc063d4f5c63f5)
+- [x] [Add dark mode](https://github.com/OrlandoEduardo101/im-mottu-mobile/commit/5f41dca927a49588a82c327bf05bb7f5e2aacc21)
+- [x] Structuring project
+- [x] Listing characters
+- [x] Showing character detail
 
 # 🛵 I'm Mottu Mobile 🛵
 
