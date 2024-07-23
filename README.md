@@ -1,5 +1,5 @@
 # Features 
-- [ ] Firebase crash analytics
+- [x] Firebase crash analytics
 - [x] [clear cache when detached app](https://github.com/OrlandoEduardo101/im-mottu-mobile/commit/dfa23e4eb11a0f63982e5b538825d34b9fa997e0)
 - [x] [Add pagination infinity list and filter with name in api](https://github.com/OrlandoEduardo101/im-mottu-mobile/commit/93fcb1402f2c66063545d270e0361493718d2b5c)
 - [x] [add check connectivity with subscription and platform channel](https://github.com/OrlandoEduardo101/im-mottu-mobile/commit/2042b269030ff8bedeba55eb0fc3020138b8b7cb)
@@ -9,6 +9,10 @@
 - [x] Structuring project
 - [x] Listing characters
 - [x] Showing character detail
+
+# Demonstration
+[![](https://markdown-videos-api.jorgenkh.no/youtube/gkrbwZFgiVY)]([https://youtu.be/dQw4w9WgXcQ](https://youtu.be/gkrbwZFgiVY))
+
 
 # 🛵 I'm Mottu Mobile 🛵
 
