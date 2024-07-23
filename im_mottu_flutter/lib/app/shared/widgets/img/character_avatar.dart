@@ -17,6 +17,7 @@ class CharacterAvatar extends StatelessWidget {
         color: colorScheme.onSecondaryFixed.withOpacity(0.25),
         size: 110,
       ),
+      
     );
   }
 }

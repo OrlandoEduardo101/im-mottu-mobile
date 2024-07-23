@@ -127,6 +127,7 @@ class CharacterDetailSheet extends StatelessWidget {
                 tag: 'character_hero_tag_${item.id}',
                 child: SizedBox(
                   width: size.width * 0.45,
+                  height: size.width * 0.45,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(200),
                     child: Material(
