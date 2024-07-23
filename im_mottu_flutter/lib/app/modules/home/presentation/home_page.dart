@@ -22,10 +22,29 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final ScrollController scrollController = ScrollController();
+  double boundaryOffset = 0.5;
   @override
   void initState() {
     super.initState();
     widget.homeStore.getCharacters();
+    scrollController.addListener(scrollListener);
+  }
+
+  @override
+  void dispose() {
+    scrollController.removeListener(scrollListener);
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  void scrollListener() {
+    if (widget.homeStore.state.status == HomeStateStatus.success) {
+      //load more data
+      if (scrollController.offset >= scrollController.position.maxScrollExtent * boundaryOffset) {
+        widget.homeStore.getCharacters();
+      }
+    }
   }
 
   @override
@@ -56,6 +75,7 @@ class _HomePageState extends State<HomePage> {
           init: widget.homeStore,
           builder: (controller) {
             return SingleChildScrollView(
+              controller: scrollController,
               padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -66,11 +86,15 @@ class _HomePageState extends State<HomePage> {
                     child: CustomSearchField(
                       hintText: 'Search character',
                       onChanged: (value) {
-                        widget.homeStore.getCharactersByText(value);
+                        if (widget.appStore.state.hasConnection) {
+                          widget.homeStore.getCharactersByTextFromApi(value);
+                        } else {
+                          widget.homeStore.getCharactersByText(value);
+                        }
                       },
                     ),
                   ),
-                  if (controller.state.status == HomeStateStatus.loading)
+                  if (controller.state.status == HomeStateStatus.loading && controller.state.charactersList.isEmpty)
                     const Center(
                       child: CircularProgressIndicator.adaptive(),
                     )
@@ -88,8 +112,17 @@ class _HomePageState extends State<HomePage> {
                       shrinkWrap: true,
                       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                           maxCrossAxisExtent: 200, childAspectRatio: 6 / 7, crossAxisSpacing: 20, mainAxisSpacing: 20),
-                      itemCount: controller.state.charactersListFiltered.length,
+                      itemCount: controller.state.charactersListFiltered.length + 1,
                       itemBuilder: (context, index) {
+                        if (index == controller.state.charactersListFiltered.length) {
+                          if (controller.state.status == HomeStateStatus.loading) {
+                            return const Center(
+                              child: CircularProgressIndicator.adaptive(),
+                            );
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        }
                         final item = controller.state.charactersListFiltered[index];
                         return CharacterCardWidget(
                           item: item,

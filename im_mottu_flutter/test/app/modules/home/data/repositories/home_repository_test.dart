@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:im_mottu_flutter/app/modules/home/data/repositories/home_repository.dart';
 import 'package:im_mottu_flutter/app/modules/home/interactor/models/character_wrapper_model.dart';
+import 'package:im_mottu_flutter/app/modules/home/interactor/params/get_character_list_params.dart';
 import 'package:im_mottu_flutter/app/modules/home/interactor/repositories/i_home_repository.dart';
 import 'package:im_mottu_flutter/app/shared/errors/datasource_error.dart';
 import 'package:im_mottu_flutter/app/shared/errors/http_client_error.dart';
@@ -37,7 +38,7 @@ main() {
     test('Must return a CharacterDataWrapper with a list characters when http client return response with success',
         () async {
       // mock
-      when(() => httpClient.get(any()))
+      when(() => httpClient.get(any(), params: any(named: 'params')))
           .thenAnswer((_) async => HttpResponse(data: jsonDecode(apiResponseJson), statusCode: 200));
 
       when(() => connectivityService.checkConnectivitySnapshot).thenReturn(true);
@@ -45,7 +46,7 @@ main() {
       when(() => storage.saveCacheMap(key: any(named: 'key'), data: any(named: 'data'))).thenAnswer((_) async => true);
 
       // act
-      final result = await repository.getCharacterListData();
+      final result = await repository.getCharacterListData(GetCharacterListParams(offset: 10));
 
       // assert
       expect(result.$1, isA<CharacterDataWrapper>());
@@ -56,7 +57,7 @@ main() {
     test('Must return a CharacterDataWrapper with a list characters when local storage return response with success',
         () async {
       // mock
-      when(() => httpClient.get(any()))
+      when(() => httpClient.get(any(), params: any(named: 'params')))
           .thenAnswer((_) async => HttpResponse(data: jsonDecode(apiResponseJson), statusCode: 200));
 
       when(() => connectivityService.checkConnectivitySnapshot).thenReturn(false);
@@ -66,7 +67,7 @@ main() {
           )).thenAnswer((_) async => jsonDecode(apiResponseJson));
 
       // act
-      final result = await repository.getCharacterListData();
+      final result = await repository.getCharacterListData(GetCharacterListParams(offset: 10));
 
       // assert
       verifyNever(() => httpClient.get(''));
@@ -77,7 +78,7 @@ main() {
 
     test('Must return a empty list of AssetsModel when http client throws a error', () async {
       // mock
-      when(() => httpClient.get(any())).thenThrow(const HttpClientError(
+      when(() => httpClient.get(any(), params: any(named: 'params'))).thenThrow(const HttpClientError(
           data: {'message': 'Expired token'}, message: '401 - Authentication invalid', stackTrace: null));
 
       when(() => connectivityService.checkConnectivitySnapshot).thenReturn(true);
@@ -85,7 +86,7 @@ main() {
       when(() => storage.saveCacheMap(key: any(named: 'key'), data: any(named: 'data'))).thenAnswer((_) async => true);
 
       // act
-      final result = await repository.getCharacterListData();
+      final result = await repository.getCharacterListData(GetCharacterListParams(offset: 10));
 
       // assert
       verifyNever(() => storage.saveCacheMap(key: 'key', data: {}));
@@ -95,7 +96,7 @@ main() {
 
     test('Must return a empty list of AssetsModel when local storage throws a error', () async {
       // mock
-      when(() => httpClient.get(any()))
+      when(() => httpClient.get(any(), params: any(named: 'params')))
           .thenAnswer((_) async => HttpResponse(data: jsonDecode(apiResponseJson), statusCode: 200));
 
       when(() => connectivityService.checkConnectivitySnapshot).thenReturn(false);
@@ -104,7 +105,7 @@ main() {
           .thenThrow(const DatasourceError(message: 'Error local storage', stackTrace: null));
 
       // act
-      final result = await repository.getCharacterListData();
+      final result = await repository.getCharacterListData(GetCharacterListParams(offset: 10));
 
       // assert
       verifyNever(() => httpClient.get(''));

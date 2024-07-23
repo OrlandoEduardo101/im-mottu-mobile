@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:im_mottu_flutter/app/shared/utils/date_format_extension.dart';
 
-import '../../../../shared/widgets/img/cached_network_image_widget.dart';
+import '../../../../shared/widgets/img/character_avatar.dart';
 import '../../interactor/models/result_character.dart';
 import 'expandable_session_item.dart';
 
@@ -127,11 +127,12 @@ class CharacterDetailSheet extends StatelessWidget {
                 tag: 'character_hero_tag_${item.id}',
                 child: SizedBox(
                   width: size.width * 0.45,
+                  height: size.width * 0.45,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(200),
                     child: Material(
                       elevation: 8,
-                      child: CachedNetworkImageWidget(
+                      child: CharacterAvatar(
                         imageUrl: '${item.thumbnail.path}/standard_fantastic.jpg',
                       ),
                     ),

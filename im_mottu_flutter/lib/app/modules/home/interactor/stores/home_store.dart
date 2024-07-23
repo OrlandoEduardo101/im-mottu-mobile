@@ -1,22 +1,32 @@
 import 'package:get/get.dart';
 import 'package:im_mottu_flutter/app/modules/home/interactor/states/home_state.dart';
 
+import '../../../../shared/services/debouncer/debouncer_service.dart';
 import '../models/result_character.dart';
+import '../params/get_character_list_params.dart';
 import '../repositories/i_home_repository.dart';
 
 class HomeStore extends GetxController {
   HomeState state = HomeState.empty();
   final IHomeRepository homeRepository;
+  final IDebouncerService debouncerService;
 
-  HomeStore(this.homeRepository);
+  HomeStore(this.homeRepository, this.debouncerService);
 
-  Future<void> getCharacters() async {
-    state = state.copyWith(status: HomeStateStatus.loading);
+  Future<void> getCharacters({String textName = '', int? offset}) async {
+    state = state.copyWith(
+        status: HomeStateStatus.loading,
+        charactersListFiltered: offset != null && offset == 0 ? [] : null,
+        charactersList: offset != null && offset == 0 ? [] : null);
     update();
 
-    final result = await homeRepository.getCharacterListData();
+    final result = await homeRepository.getCharacterListData(
+        GetCharacterListParams(offset: offset ?? state.charactersList.length, nameFilter: textName));
     if (result.$1?.data.results != null) {
-      final resultsList = result.$1?.data.results;
+      final resultsList = <ResultCharacter>[
+        ...state.charactersList,
+        ...result.$1?.data.results ?? [],
+      ];
       state = state.copyWith(
           status: HomeStateStatus.success, charactersList: resultsList, charactersListFiltered: resultsList);
     } else {
@@ -38,5 +48,18 @@ class HomeStore extends GetxController {
     state = state.copyWith(charactersListFiltered: newListChar);
 
     update();
+  }
+
+  Future<void> getCharactersByTextFromApi(String text) async {
+    List<ResultCharacter> newListChar = state.charactersList;
+
+    debouncerService.run(() {
+      if (text.isNotEmpty || state.charactersList.isEmpty) {
+        getCharacters(textName: text, offset: 0);
+      }
+      state = state.copyWith(charactersListFiltered: newListChar);
+
+      update();
+    });
   }
 }

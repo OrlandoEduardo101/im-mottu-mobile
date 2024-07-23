@@ -21,6 +21,8 @@ class CachedNetworkImageWidget extends StatelessWidget {
       cacheManager: CacheManager(Config('image-cache-key')),
       placeholder: placeholder,
       errorWidget: errorWidget,
+      progressIndicatorBuilder: (context, url, progress) => const CircularProgressIndicator.adaptive(),
+      
       height: height,
       httpHeaders: headers,
     );

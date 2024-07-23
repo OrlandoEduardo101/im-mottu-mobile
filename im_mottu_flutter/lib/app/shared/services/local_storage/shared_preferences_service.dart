@@ -10,6 +10,7 @@ abstract class ISharedPreferencesService {
   Future<Map<String, dynamic>> readCacheMap({required String key});
   Future<void> saveThemeApp({required ThemeEnum theme});
   Future<String?> getThemeApp();
+  Future<void> cleanCache();
 }
 
 class SharedPreferencesService implements ISharedPreferencesService {
@@ -36,5 +37,11 @@ class SharedPreferencesService implements ISharedPreferencesService {
   Future<void> saveCacheMap({required String key, required Map<String, dynamic> data}) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(key, jsonEncode(data));
+  }
+
+  @override
+  Future<void> cleanCache() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
   }
 }
