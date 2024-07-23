@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:im_mottu_flutter/app/shared/utils/date_format_extension.dart';
 
-import '../../../../shared/widgets/img/cached_network_image_widget.dart';
+import '../../../../shared/widgets/img/character_avatar.dart';
 import '../../interactor/models/result_character.dart';
 
 class CharacterCardWidget extends StatelessWidget {
@@ -32,7 +32,7 @@ class CharacterCardWidget extends StatelessWidget {
               tag: 'character_hero_tag_${item.id}',
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(200),
-                child: CachedNetworkImageWidget(
+                child: CharacterAvatar(
                   imageUrl: '${item.thumbnail.path}/standard_medium.jpg',
                 ),
               ),

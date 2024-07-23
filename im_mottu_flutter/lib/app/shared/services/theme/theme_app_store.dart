@@ -21,4 +21,8 @@ class ThemeAppStore extends ValueNotifier<ThemeAppState> {
     value = ThemeAppState(theme: theme);
     prefs.saveThemeApp(theme: theme);
   }
+
+  Future<void> clearCache() async {
+    await prefs.cleanCache();
+  }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:im_mottu_flutter/app/app_store.dart';
@@ -15,7 +17,7 @@ class AppWidget extends StatefulWidget {
   State<AppWidget> createState() => _AppWidgetState();
 }
 
-class _AppWidgetState extends State<AppWidget> {
+class _AppWidgetState extends State<AppWidget> with WidgetsBindingObserver {
   final ThemeAppStore themeStore = injector.get<ThemeAppStore>();
   final AppStore appStore = injector.get<AppStore>();
   double topPositioned = 0;
@@ -27,17 +29,28 @@ class _AppWidgetState extends State<AppWidget> {
     themeStore.addListener(() {
       appStore.updateTheme(themeStore.value);
     });
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     appStore.cancelConnectivitySubscription();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    log('CYCLE-STATE: $state');
+    if (state == AppLifecycleState.detached) {
+      await themeStore.clearCache();
+    }
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    Color selectedColor = const Color(0xff33ff00);
+    Color selectedColor = const Color.fromARGB(255, 255, 0, 0);
     Brightness selectedBrightness = Brightness.light;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
