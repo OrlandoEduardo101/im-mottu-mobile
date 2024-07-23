@@ -1,4 +1,5 @@
 import 'package:auto_injector/auto_injector.dart';
+import 'package:im_mottu_flutter/app/shared/services/debouncer/debouncer_service.dart';
 import 'package:uno/uno.dart';
 
 import 'app_store.dart';
@@ -16,6 +17,7 @@ final injector = AutoInjector(on: (i) {
   i.addSingleton<Uno>(Uno.new);
   i.addSingleton<IHttpClient>(UnoHttpClient.new);
   i.addSingleton<ISharedPreferencesService>(SharedPreferencesService.new);
+  i.addSingleton<IDebouncerService>(DebouncerService.new);
 
   // repositories
   i.add<IHomeRepository>(HomeRepository.new);
