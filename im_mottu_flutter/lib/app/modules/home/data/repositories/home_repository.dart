@@ -4,6 +4,7 @@ import 'package:im_mottu_flutter/env.dart';
 
 import '../../../../shared/constants/constants.dart';
 import '../../../../shared/errors/i_failure.dart';
+import '../../../../shared/services/analytics/crashalytics_service.dart';
 import '../../../../shared/services/connectivity/check_connectivity_service.dart';
 import '../../../../shared/services/http_client/i_http_client.dart';
 import '../../../../shared/services/local_storage/preferences_key_strings.dart';
@@ -16,8 +17,10 @@ class HomeRepository implements IHomeRepository {
   final IHttpClient httpClient;
   final ICheckConnectivityService checkConnectivityService;
   final ISharedPreferencesService sharedPreferencesService;
+  final ICrashlyticsService crashlyticsService;
 
-  HomeRepository(this.httpClient, this.checkConnectivityService, this.sharedPreferencesService);
+  HomeRepository(
+      this.httpClient, this.checkConnectivityService, this.sharedPreferencesService, this.crashlyticsService);
   @override
   Future<(CharacterDataWrapper?, String errorMessage)> getCharacterListData(GetCharacterListParams params) async {
     try {
@@ -43,8 +46,9 @@ class HomeRepository implements IHomeRepository {
       }
       final characterData = CharacterDataWrapper.fromMap(data);
       return (characterData, '');
-    } on IFailure catch (e) {
+    } on IFailure catch (e, s) {
       log(e.toString());
+      crashlyticsService.recordError(e, s);
       return (null, e.message);
     }
   }
