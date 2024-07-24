@@ -66,10 +66,13 @@ class _AppWidgetState extends State<AppWidget> with WidgetsBindingObserver {
       builder: (context, child) => GetBuilder<AppStore>(
         init: appStore,
         builder: (controller) {
-          if (!controller.state.hasConnection) {
-            topPositioned = kToolbarHeight + 20;
-          } else {
-            topPositioned = 0;
+          switch (controller.state.hasConnection) {
+            case true:
+              topPositioned = 0;
+              break;
+            case false:
+              topPositioned = kToolbarHeight + 20;
+              break;
           }
           return Theme(
               data: ThemeData(

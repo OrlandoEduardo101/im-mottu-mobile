@@ -8,6 +8,7 @@ import 'package:im_mottu_flutter/app/shared/widgets/img/marvel_logo.dart';
 
 import '../../../shared/constants/constants.dart';
 import '../../../shared/widgets/buttons/switch_theme_mode.dart';
+import '../../../shared/widgets/loading/shimmer_container.dart';
 import '../../../shared/widgets/text_input/custom_search_field.dart';
 import '../interactor/stores/home_store.dart';
 import 'widgets/character_card_widget.dart';
@@ -24,6 +25,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final ScrollController scrollController = ScrollController();
+  final searchEditingController = TextEditingController();
   double boundaryOffset = 0.5;
   @override
   void initState() {
@@ -41,7 +43,6 @@ class _HomePageState extends State<HomePage> {
 
   void scrollListener() {
     if (widget.homeStore.state.status == HomeStateStatus.success) {
-      //load more data
       if (scrollController.offset >= scrollController.position.maxScrollExtent * boundaryOffset) {
         widget.homeStore.getCharacters();
       }
@@ -67,13 +68,10 @@ class _HomePageState extends State<HomePage> {
         actions: [
           SwitchThemeMode(
               value: widget.appStore.state.themeState.theme == ThemeEnum.lightTheme,
-              onChanged: (value) {
-                if (value) {
-                  widget.appStore.changeTheme(ThemeEnum.lightTheme);
-                } else {
-                  widget.appStore.changeTheme(ThemeEnum.darkTheme);
-                }
-              }),
+              onChanged: (value) => switch (value) {
+                    true => widget.appStore.changeTheme(ThemeEnum.lightTheme),
+                    false => widget.appStore.changeTheme(ThemeEnum.darkTheme),
+                  }),
         ],
       ),
       body: GetBuilder<HomeStore>(
@@ -90,53 +88,61 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.only(bottom: 22.0),
                     child: CustomSearchField(
                       hintText: 'Search character',
-                      onChanged: (value) {
-                        if (widget.appStore.state.hasConnection) {
-                          widget.homeStore.getCharactersByTextFromApi(value);
-                        } else {
-                          widget.homeStore.getCharactersByText(value);
-                        }
+                      textEditingController: searchEditingController,
+                      onChanged: (value) => switch (widget.appStore.state.hasConnection) {
+                        true => widget.homeStore.getCharactersByTextFromApi(value),
+                        false => widget.homeStore.getCharactersByText(value),
                       },
                     ),
                   ),
-                  if (controller.state.status == HomeStateStatus.loading && controller.state.charactersList.isEmpty)
-                    const Center(
-                      child: CircularProgressIndicator.adaptive(),
-                    )
-                  else if (controller.state.status == HomeStateStatus.error)
-                    Center(
-                      child: Text(controller.state.errorMessage),
-                    )
-                  else if (controller.state.charactersListFiltered.isEmpty)
-                    const Center(
-                      child: Text('Characters not found'),
-                    )
-                  else
-                    GridView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 200, childAspectRatio: 6 / 7, crossAxisSpacing: 20, mainAxisSpacing: 20),
-                      itemCount: controller.state.charactersListFiltered.length + 1,
-                      itemBuilder: (context, index) {
-                        if (index == controller.state.charactersListFiltered.length) {
-                          if (controller.state.status == HomeStateStatus.loading) {
-                            return const Center(
-                              child: CircularProgressIndicator.adaptive(),
-                            );
-                          } else {
-                            return const SizedBox.shrink();
+                  switch ((controller.state.status, controller.state.charactersList.isEmpty)) {
+                    (HomeStateStatus.loading, true) => GridView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            childAspectRatio: 6 / 7,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20),
+                        itemCount: 20,
+                        itemBuilder: (context, index) {
+                          return const ShimmerContainer();
+                        },
+                      ),
+                    (HomeStateStatus.error, true || false) => Center(
+                        child: Text(controller.state.errorMessage),
+                      ),
+                    (HomeStateStatus.success, true) => const Center(
+                        child: Text('Characters not found'),
+                      ),
+                    (HomeStateStatus.success || HomeStateStatus.loading, false) => GridView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            childAspectRatio: 6 / 7,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20),
+                        itemCount: controller.state.charactersListFiltered.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index == controller.state.charactersListFiltered.length) {
+                            if (controller.state.status == HomeStateStatus.loading) {
+                              return const ShimmerContainer();
+                            } else {
+                              return const SizedBox.shrink();
+                            }
                           }
-                        }
-                        final item = controller.state.charactersListFiltered[index];
-                        return CharacterCardWidget(
-                          item: item,
-                          onTap: () {
-                            BottomSheetService.showCustomBottomSheet(context, CharacterDetailSheet(item: item));
-                          },
-                        );
-                      },
-                    ),
+                          final item = controller.state.charactersListFiltered[index];
+                          return CharacterCardWidget(
+                            item: item,
+                            onTap: () {
+                              BottomSheetService.showCustomBottomSheet(context, CharacterDetailSheet(item: item));
+                              widget.homeStore.logCharacterViewed(item.name);
+                            },
+                          );
+                        },
+                      ),
+                  }
                 ],
               ),
             );

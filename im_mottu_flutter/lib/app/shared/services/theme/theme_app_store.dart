@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../local_storage/preferences_key_strings.dart';
 import '../local_storage/shared_preferences_service.dart';
 import 'theme_app_state.dart';
 
@@ -9,7 +10,7 @@ class ThemeAppStore extends ValueNotifier<ThemeAppState> {
   ThemeAppStore(this.prefs) : super(ThemeAppState.initState());
 
   Future<void> getThemeApp() async {
-    final themePrefs = await prefs.getThemeApp();
+    final themePrefs = await prefs.readString(key: kThemePrefsKey);
     ThemeEnum theme;
 
     themePrefs == ThemeEnum.darkTheme.name ? theme = ThemeEnum.darkTheme : theme = ThemeEnum.lightTheme;
@@ -19,7 +20,7 @@ class ThemeAppStore extends ValueNotifier<ThemeAppState> {
 
   void changeTheme(ThemeEnum theme) {
     value = ThemeAppState(theme: theme);
-    prefs.saveThemeApp(theme: theme);
+    prefs.setString(key: kThemePrefsKey, value: theme.name);
   }
 
   Future<void> clearCache() async {

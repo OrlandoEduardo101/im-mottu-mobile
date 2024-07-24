@@ -7,6 +7,7 @@ import 'package:im_mottu_flutter/app/modules/home/interactor/params/get_characte
 import 'package:im_mottu_flutter/app/modules/home/interactor/repositories/i_home_repository.dart';
 import 'package:im_mottu_flutter/app/shared/errors/datasource_error.dart';
 import 'package:im_mottu_flutter/app/shared/errors/http_client_error.dart';
+import 'package:im_mottu_flutter/app/shared/services/analytics/crashalytics_service.dart';
 import 'package:im_mottu_flutter/app/shared/services/connectivity/check_connectivity_service.dart';
 import 'package:im_mottu_flutter/app/shared/services/http_client/http_response.dart';
 import 'package:im_mottu_flutter/app/shared/services/http_client/i_http_client.dart';
@@ -21,17 +22,27 @@ class CheckConnectivityMock extends Mock implements ICheckConnectivityService {}
 
 class StorageMock extends Mock implements ISharedPreferencesService {}
 
+class CrashAlyticsMock extends Mock implements ICrashlyticsService {}
+
+class StackTraceFake extends Fake implements StackTrace {}
+
 main() {
   late final IHomeRepository repository;
   late final IHttpClient httpClient;
   late final ICheckConnectivityService connectivityService;
   late final ISharedPreferencesService storage;
+  late final ICrashlyticsService crashlyticsService;
 
   setUpAll(() {
     httpClient = HttpClientMock();
     connectivityService = CheckConnectivityMock();
     storage = StorageMock();
-    repository = HomeRepository(httpClient, connectivityService, storage);
+    crashlyticsService = CrashAlyticsMock();
+    repository = HomeRepository(httpClient, connectivityService, storage, crashlyticsService);
+
+    registerFallbackValue(StackTraceFake());
+
+    when(() => crashlyticsService.recordError(any(), any())).thenAnswer((_) async => true);
   });
 
   group('Get character list', () {

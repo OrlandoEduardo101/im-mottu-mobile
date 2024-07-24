@@ -16,7 +16,7 @@ class DebouncerService implements IDebouncerService {
   VoidCallback? action;
   Timer? _timer;
 
-  DebouncerService({this.milliseconds = 500});
+  DebouncerService({this.milliseconds = 1000});
 
   @override
   void run(VoidCallback action) {
