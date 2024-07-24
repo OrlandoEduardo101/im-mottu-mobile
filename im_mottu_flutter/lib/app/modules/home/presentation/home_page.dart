@@ -133,6 +133,7 @@ class _HomePageState extends State<HomePage> {
                           item: item,
                           onTap: () {
                             BottomSheetService.showCustomBottomSheet(context, CharacterDetailSheet(item: item));
+                            widget.homeStore.logCharacterViewed(item.name);
                           },
                         );
                       },

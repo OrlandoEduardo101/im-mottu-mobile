@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:im_mottu_flutter/app/modules/home/interactor/states/home_state.dart';
 
+import '../../../../shared/constants/constants.dart';
+import '../../../../shared/services/analytics/analytics_service.dart';
 import '../../../../shared/services/debouncer/debouncer_service.dart';
 import '../models/result_character.dart';
 import '../params/get_character_list_params.dart';
@@ -10,8 +12,9 @@ class HomeStore extends GetxController {
   HomeState state = HomeState.empty();
   final IHomeRepository homeRepository;
   final IDebouncerService debouncerService;
+  final IAnalyticsService analyticsService;
 
-  HomeStore(this.homeRepository, this.debouncerService);
+  HomeStore(this.homeRepository, this.debouncerService, this.analyticsService);
 
   Future<void> getCharacters({String textName = '', int? offset}) async {
     state = state.copyWith(
@@ -46,6 +49,9 @@ class HomeStore extends GetxController {
           .toList();
     }
     state = state.copyWith(charactersListFiltered: newListChar);
+    debouncerService.run(() {
+      logCharacterSearched(text);
+    });
 
     update();
   }
@@ -54,12 +60,26 @@ class HomeStore extends GetxController {
     List<ResultCharacter> newListChar = state.charactersList;
 
     debouncerService.run(() {
-      if (text.isNotEmpty || state.charactersList.isEmpty) {
-        getCharacters(textName: text, offset: 0);
-      }
+      getCharacters(textName: text, offset: 0);
+
       state = state.copyWith(charactersListFiltered: newListChar);
+      logCharacterSearched(text);
 
       update();
     });
+  }
+
+  Future<void> logCharacterViewed(String characterName) async {
+    await analyticsService.logEvent(
+      kCharacterViewdEventTag,
+      {kCharacterNameEventTag: characterName},
+    );
+  }
+
+  Future<void> logCharacterSearched(String characterName) async {
+    await analyticsService.logEvent(
+      kCharacterSearchEventTag,
+      {kCharacterNameEventTag: characterName},
+    );
   }
 }
