@@ -24,6 +24,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final ScrollController scrollController = ScrollController();
+  final searchEditingController = TextEditingController();
   double boundaryOffset = 0.5;
   @override
   void initState() {
@@ -90,6 +91,7 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.only(bottom: 22.0),
                     child: CustomSearchField(
                       hintText: 'Search character',
+                      textEditingController: searchEditingController,
                       onChanged: (value) {
                         if (widget.appStore.state.hasConnection) {
                           widget.homeStore.getCharactersByTextFromApi(value);
