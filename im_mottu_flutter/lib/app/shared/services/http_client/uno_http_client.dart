@@ -1,5 +1,6 @@
 import 'package:uno/uno.dart';
 
+import '../../../../env.dart';
 import '../../constants/constants.dart';
 import '../../errors/http_client_error.dart';
 import 'http_response.dart';
@@ -12,6 +13,7 @@ class UnoHttpClient implements IHttpClient {
   UnoHttpClient(this.uno) {
     uno.interceptors.request.use(
       (request) async {
+        request = addApiKey(request);
         return request;
       },
       onError: (error) async {
@@ -26,6 +28,24 @@ class UnoHttpClient implements IHttpClient {
     );
   }
 
+  Request addApiKey(Request request) {
+    var uri = request.uri;
+
+    final dateTime = DateTime.now().add(const Duration(minutes: 5)).millisecondsSinceEpoch.toString();
+
+    final newQueryParameters = Map<String, String>.from(uri.queryParameters)
+      ..addAll({
+        'ts': dateTime,
+        'apikey': Env.apiKey,
+        'hash': Env.apiHashKey(timeStamp: dateTime),
+      });
+
+    uri = uri.replace(queryParameters: newQueryParameters);
+
+    request = request.copyWith(uri: uri);
+    return request;
+  }
+
   @override
   AsyncResponse get(
     String url, {
@@ -37,8 +57,12 @@ class UnoHttpClient implements IHttpClient {
     Map<String, String> params = const {},
   }) async {
     try {
+      var url0 = url;
+      if (!url0.startsWith('http')) {
+        url0 = kBaseUrl + url;
+      }
       final result = await uno.get(
-        kBaseUrl + url,
+        url0,
         headers: headers,
         params: params,
       );
