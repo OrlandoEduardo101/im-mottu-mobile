@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:im_mottu_flutter/app/shared/utils/date_format_extension.dart';
 
 import '../../../../shared/widgets/img/character_avatar.dart';
+import '../../interactor/models/comics_item.dart';
 import '../../interactor/models/result_character.dart';
 import 'expandable_session_item.dart';
 
 class CharacterDetailSheet extends StatelessWidget {
-  const CharacterDetailSheet({super.key, required this.item});
+  const CharacterDetailSheet({super.key, required this.item, this.onTapComic});
   final ResultCharacter item;
+  final void Function(ComicsItem)? onTapComic;
 
   @override
   Widget build(BuildContext context) {
@@ -68,10 +70,15 @@ class CharacterDetailSheet extends StatelessWidget {
                         ExpandableSessionItem(
                           title: 'Comics',
                           widgets: item.comics.items
-                              .map((element) => Text(
-                                    '• ${element.name}',
-                                    textAlign: TextAlign.justify,
-                                    style: textTheme.bodyLarge?.copyWith(),
+                              .map((element) => InkWell(
+                                    onTap: () {
+                                      onTapComic?.call(element);
+                                    },
+                                    child: Text(
+                                      '• ${element.name}',
+                                      textAlign: TextAlign.justify,
+                                      style: textTheme.bodyLarge?.copyWith(),
+                                    ),
                                   ))
                               .toList(),
                         ),

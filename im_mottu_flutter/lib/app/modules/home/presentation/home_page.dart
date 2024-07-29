@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:im_mottu_flutter/app/app_store.dart';
 import 'package:im_mottu_flutter/app/modules/home/interactor/states/home_state.dart';
 import 'package:im_mottu_flutter/app/shared/services/theme/theme_app_state.dart';
@@ -136,7 +137,14 @@ class _HomePageState extends State<HomePage> {
                           return CharacterCardWidget(
                             item: item,
                             onTap: () {
-                              BottomSheetService.showCustomBottomSheet(context, CharacterDetailSheet(item: item));
+                              BottomSheetService.showCustomBottomSheet(
+                                  context,
+                                  CharacterDetailSheet(
+                                    item: item,
+                                    onTapComic: (comic) {
+                                      context.pushNamed("comics", queryParameters: {'uriResource': comic.resourceUri});
+                                    },
+                                  ));
                               widget.homeStore.logCharacterViewed(item.name);
                             },
                           );

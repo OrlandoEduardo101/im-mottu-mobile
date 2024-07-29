@@ -1,8 +1,13 @@
 import 'dart:convert';
 
-enum UrlType { COMICLINK, DETAIL, WIKI }
+enum UrlType { COMICLINK, DETAIL, WIKI, PURCHASE, OTHER }
 
-final urlTypeValues = EnumValues({"comiclink": UrlType.COMICLINK, "detail": UrlType.DETAIL, "wiki": UrlType.WIKI});
+final urlTypeValues = EnumValues({
+  "comiclink": UrlType.COMICLINK,
+  "detail": UrlType.DETAIL,
+  "wiki": UrlType.WIKI,
+  "purchase": UrlType.PURCHASE,
+});
 
 class EnumValues<T> {
   Map<String, T> map;
@@ -39,7 +44,7 @@ class Url {
   String toJson() => json.encode(toMap());
 
   factory Url.fromMap(Map<String, dynamic> json) => Url(
-        type: urlTypeValues.map[json["type"]]!,
+        type: urlTypeValues.map[json["type"]] ?? UrlType.OTHER,
         url: json["url"],
       );
 

@@ -53,6 +53,7 @@ class _ShimmerContainerState extends State<ShimmerContainer> with SingleTickerPr
           child: Container(
             width: widget.width,
             height: widget.height,
+            
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               color: Colors.grey[300],

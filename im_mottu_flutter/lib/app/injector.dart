@@ -1,5 +1,6 @@
 import 'package:auto_injector/auto_injector.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:im_mottu_flutter/app/modules/home/submodules/comics/interactor/repositories/i_comics_repository.dart';
 import 'package:im_mottu_flutter/app/shared/services/debouncer/debouncer_service.dart';
 import 'package:uno/uno.dart';
 
@@ -7,6 +8,8 @@ import 'app_store.dart';
 import 'modules/home/data/repositories/home_repository.dart';
 import 'modules/home/interactor/repositories/i_home_repository.dart';
 import 'modules/home/interactor/stores/home_store.dart';
+import 'modules/home/submodules/comics/data/repositories/comics_repository.dart';
+import 'modules/home/submodules/comics/interactor/stores/comic_store.dart';
 import 'shared/services/analytics/analytics_service.dart';
 import 'shared/services/analytics/crashalytics_service.dart';
 import 'shared/services/connectivity/check_connectivity_service.dart';
@@ -27,10 +30,12 @@ final injector = AutoInjector(on: (i) {
 
   // repositories
   i.add<IHomeRepository>(HomeRepository.new);
+  i.add<IComicsRepository>(ComicsRepository.new);
 
   // stores
   i.addSingleton<ThemeAppStore>(ThemeAppStore.new);
   i.addSingleton<AppStore>(AppStore.new);
   i.addSingleton<HomeStore>(HomeStore.new);
+  i.addSingleton<ComicStore>(ComicStore.new);
   i.addSingleton<ICheckConnectivityService>(CheckConnectivityService.new);
 });
