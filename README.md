@@ -9,6 +9,7 @@
 - [x] Structuring project
 - [x] Listing characters
 - [x] Showing character detail
+- [x] Comics detail page
 
 # Demonstration
 
