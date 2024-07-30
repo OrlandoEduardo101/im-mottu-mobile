@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'comics.dart';
+import 'resources.dart';
 import 'stories.dart';
 import 'thumbnail.dart';
 import 'url.dart';
@@ -12,10 +12,10 @@ class ResultCharacter {
   final DateTime modified;
   final Thumbnail thumbnail;
   final String resourceUri;
-  final Comics comics;
-  final Comics series;
+  final Resources comics;
+  final Resources series;
   final Stories stories;
-  final Comics events;
+  final Resources events;
   final List<Url> urls;
 
   ResultCharacter({
@@ -39,10 +39,10 @@ class ResultCharacter {
     DateTime? modified,
     Thumbnail? thumbnail,
     String? resourceUri,
-    Comics? comics,
-    Comics? series,
+    Resources? comics,
+    Resources? series,
     Stories? stories,
-    Comics? events,
+    Resources? events,
     List<Url>? urls,
   }) =>
       ResultCharacter(
@@ -70,10 +70,10 @@ class ResultCharacter {
         modified: DateTime.tryParse(json["modified"]) ?? DateTime.now(),
         thumbnail: Thumbnail.fromMap(json["thumbnail"]),
         resourceUri: json["resourceURI"],
-        comics: Comics.fromMap(json["comics"]),
-        series: Comics.fromMap(json["series"]),
+        comics: Resources.fromMap(json["comics"]),
+        series: Resources.fromMap(json["series"]),
         stories: Stories.fromMap(json["stories"]),
-        events: Comics.fromMap(json["events"]),
+        events: Resources.fromMap(json["events"]),
         urls: List<Url>.from(json["urls"].map((x) => Url.fromMap(x))),
       );
 

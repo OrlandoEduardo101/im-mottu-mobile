@@ -1,28 +1,28 @@
 import 'dart:convert';
 
-class ComicsItem {
+class ResourceItem {
   final String resourceUri;
   final String name;
 
-  ComicsItem({
+  ResourceItem({
     required this.resourceUri,
     required this.name,
   });
 
-  ComicsItem copyWith({
+  ResourceItem copyWith({
     String? resourceUri,
     String? name,
   }) =>
-      ComicsItem(
+      ResourceItem(
         resourceUri: resourceUri ?? this.resourceUri,
         name: name ?? this.name,
       );
 
-  factory ComicsItem.fromJson(String str) => ComicsItem.fromMap(json.decode(str));
+  factory ResourceItem.fromJson(String str) => ResourceItem.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory ComicsItem.fromMap(Map<String, dynamic> json) => ComicsItem(
+  factory ResourceItem.fromMap(Map<String, dynamic> json) => ResourceItem(
         resourceUri: json["resourceURI"],
         name: json["name"],
       );
