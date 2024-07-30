@@ -10,6 +10,7 @@
 - [x] Listing characters
 - [x] Showing character detail
 - [x] Comics detail page
+- [x] Series detail page
 
 # Demonstration
 
