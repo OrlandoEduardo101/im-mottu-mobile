@@ -1,41 +1,41 @@
 import 'dart:convert';
 
-import 'comics_item.dart';
+import 'resource_item.dart';
 
-class Comics {
+class Resources {
   final int available;
   final String collectionUri;
-  final List<ComicsItem> items;
+  final List<ResourceItem> items;
   final int returned;
 
-  Comics({
+  Resources({
     required this.available,
     required this.collectionUri,
     required this.items,
     required this.returned,
   });
 
-  Comics copyWith({
+  Resources copyWith({
     int? available,
     String? collectionUri,
-    List<ComicsItem>? items,
+    List<ResourceItem>? items,
     int? returned,
   }) =>
-      Comics(
+      Resources(
         available: available ?? this.available,
         collectionUri: collectionUri ?? this.collectionUri,
         items: items ?? this.items,
         returned: returned ?? this.returned,
       );
 
-  factory Comics.fromJson(String str) => Comics.fromMap(json.decode(str));
+  factory Resources.fromJson(String str) => Resources.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory Comics.fromMap(Map<String, dynamic> json) => Comics(
+  factory Resources.fromMap(Map<String, dynamic> json) => Resources(
         available: json["available"],
         collectionUri: json["collectionURI"],
-        items: List<ComicsItem>.from(json["items"].map((x) => ComicsItem.fromMap(x))),
+        items: List<ResourceItem>.from(json["items"].map((x) => ResourceItem.fromMap(x))),
         returned: json["returned"],
       );
 
