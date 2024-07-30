@@ -1,35 +1,34 @@
-import '../../../comics/interactor/models/comic_item_detail_model.dart';
 import '../models/serie_item_detail_model.dart';
 
-enum ComicsStateStatus {
+enum SerieStateStatus {
   loading,
   success,
   error;
 }
 
-class ComicsState {
-  final ComicsStateStatus status;
+class SerieState {
+  final SerieStateStatus status;
 
   final String errorMessage;
   final SerieItemDetailModel comicDetails;
-  ComicsState({
+  SerieState({
     required this.status,
     required this.errorMessage,
     required this.comicDetails,
   });
 
-  static ComicsState empty() => ComicsState(
-        status: ComicsStateStatus.loading,
+  static SerieState empty() => SerieState(
+        status: SerieStateStatus.loading,
         errorMessage: '',
         comicDetails: SerieItemDetailModel(),
       );
 
-  ComicsState copyWith({
-    ComicsStateStatus? status,
+  SerieState copyWith({
+    SerieStateStatus? status,
     String? errorMessage,
     SerieItemDetailModel? comicDetails,
   }) {
-    return ComicsState(
+    return SerieState(
       status: status ?? this.status,
       errorMessage: errorMessage ?? this.errorMessage,
       comicDetails: comicDetails ?? this.comicDetails,

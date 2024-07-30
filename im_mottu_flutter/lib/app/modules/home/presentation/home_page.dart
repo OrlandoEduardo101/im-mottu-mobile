@@ -144,6 +144,9 @@ class _HomePageState extends State<HomePage> {
                                     onTapComic: (comic) {
                                       context.pushNamed("comics", queryParameters: {'uriResource': comic.resourceUri});
                                     },
+                                    onTapSerie: (serie) {
+                                      context.pushNamed("series", queryParameters: {'uriResource': serie.resourceUri});
+                                    },
                                   ));
                               widget.homeStore.logCharacterViewed(item.name);
                             },

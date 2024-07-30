@@ -7,6 +7,8 @@ import 'modules/home/interactor/stores/home_store.dart';
 import 'modules/home/presentation/home_page.dart';
 import 'modules/home/submodules/comics/interactor/stores/comic_store.dart';
 import 'modules/home/submodules/comics/presentation/comic_page.dart';
+import 'modules/home/submodules/series/interactor/stores/serie_store.dart';
+import 'modules/home/submodules/series/presentation/serie_page.dart';
 import 'modules/splash/splash_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -37,6 +39,16 @@ class Routers {
         builder: (context, state) {
           return ComicPage(
             comicStore: injector.get<ComicStore>(),
+            uriResource: state.uri.queryParameters['uriResource'] ?? '',
+          );
+        },
+      ),
+      GoRoute(
+        path: '/series',
+        name: 'series',
+        builder: (context, state) {
+          return SeriePage(
+            serieStore: injector.get<SerieStore>(),
             uriResource: state.uri.queryParameters['uriResource'] ?? '',
           );
         },

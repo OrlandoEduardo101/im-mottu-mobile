@@ -10,6 +10,9 @@ import 'modules/home/interactor/repositories/i_home_repository.dart';
 import 'modules/home/interactor/stores/home_store.dart';
 import 'modules/home/submodules/comics/data/repositories/comics_repository.dart';
 import 'modules/home/submodules/comics/interactor/stores/comic_store.dart';
+import 'modules/home/submodules/series/data/repositories/series_repository.dart';
+import 'modules/home/submodules/series/interactor/repositories/i_series_repository.dart';
+import 'modules/home/submodules/series/interactor/stores/serie_store.dart';
 import 'shared/services/analytics/analytics_service.dart';
 import 'shared/services/analytics/crashalytics_service.dart';
 import 'shared/services/connectivity/check_connectivity_service.dart';
@@ -31,11 +34,13 @@ final injector = AutoInjector(on: (i) {
   // repositories
   i.add<IHomeRepository>(HomeRepository.new);
   i.add<IComicsRepository>(ComicsRepository.new);
+  i.add<ISeriesRepository>(SeriesRepository.new);
 
   // stores
   i.addSingleton<ThemeAppStore>(ThemeAppStore.new);
   i.addSingleton<AppStore>(AppStore.new);
   i.addSingleton<HomeStore>(HomeStore.new);
   i.addSingleton<ComicStore>(ComicStore.new);
+  i.addSingleton<SerieStore>(SerieStore.new);
   i.addSingleton<ICheckConnectivityService>(CheckConnectivityService.new);
 });
