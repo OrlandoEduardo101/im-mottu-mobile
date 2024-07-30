@@ -1,13 +1,14 @@
 package com.mottu.marvel.im_mottu_flutter
 
-import io.flutter.embedding.android.FlutterActivity
-
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import androidx.annotation.NonNull
+import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
 
@@ -38,11 +39,15 @@ class MainActivity: FlutterActivity() {
         connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
-                eventSink?.success(true)
+                Handler(Looper.getMainLooper()).post {
+                    eventSink?.success(true)
+                }
             }
 
             override fun onLost(network: Network) {
-                eventSink?.success(false)
+                Handler(Looper.getMainLooper()).post {
+                    eventSink?.success(false)
+                }
             }
         }
 
@@ -59,7 +64,9 @@ class MainActivity: FlutterActivity() {
         val isConnected = activeNetwork != null &&
                 connectivityManager.getNetworkCapabilities(activeNetwork)
                     ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
-        eventSink?.success(isConnected)
+        Handler(Looper.getMainLooper()).post {
+            eventSink?.success(isConnected)
+        }
     }
 
     private fun stopListening() {
