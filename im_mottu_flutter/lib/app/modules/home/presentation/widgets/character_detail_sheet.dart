@@ -7,9 +7,15 @@ import '../../interactor/models/result_character.dart';
 import 'expandable_session_item.dart';
 
 class CharacterDetailSheet extends StatelessWidget {
-  const CharacterDetailSheet({super.key, required this.item, this.onTapComic});
+  const CharacterDetailSheet({
+    super.key,
+    required this.item,
+    this.onTapComic,
+    this.onTapSerie,
+  });
   final ResultCharacter item;
   final void Function(ResourceItem)? onTapComic;
+  final void Function(ResourceItem)? onTapSerie;
 
   @override
   Widget build(BuildContext context) {
@@ -82,21 +88,26 @@ class CharacterDetailSheet extends StatelessWidget {
                                   ))
                               .toList(),
                         ),
-                      if (item.events.items.isNotEmpty)
-                        ExpandableSessionItem(
-                          title: 'Events',
-                          widgets: item.events.items
-                              .map((element) => Text(
-                                    '• ${element.name}',
-                                    textAlign: TextAlign.justify,
-                                    style: textTheme.bodyLarge?.copyWith(),
-                                  ))
-                              .toList(),
-                        ),
                       if (item.series.items.isNotEmpty)
                         ExpandableSessionItem(
                           title: 'Series',
                           widgets: item.series.items
+                              .map((element) => InkWell(
+                                    onTap: () {
+                                      onTapSerie?.call(element);
+                                    },
+                                    child: Text(
+                                      '• ${element.name}',
+                                      textAlign: TextAlign.justify,
+                                      style: textTheme.bodyLarge?.copyWith(),
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                      if (item.events.items.isNotEmpty)
+                        ExpandableSessionItem(
+                          title: 'Events',
+                          widgets: item.events.items
                               .map((element) => Text(
                                     '• ${element.name}',
                                     textAlign: TextAlign.justify,

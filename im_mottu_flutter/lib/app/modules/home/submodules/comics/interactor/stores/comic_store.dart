@@ -25,16 +25,19 @@ class ComicStore extends GetxController {
         status: ComicsStateStatus.success,
         comicDetails: result.$1,
       );
+      logComicViewd(result.$1!.title ?? '');
     } else {
       state = state.copyWith(status: ComicsStateStatus.error, errorMessage: result.$2);
     }
     update();
   }
 
-  Future<void> logCharacterViewed(String characterName) async {
-    await analyticsService.logEvent(
-      kCharacterViewdEventTag,
-      {kCharacterNameEventTag: characterName},
-    );
+  Future<void> logComicViewd(String comicName) async {
+    if (comicName.isNotEmpty) {
+      await analyticsService.logEvent(
+        kComicViewdEventTag,
+        {kCharacterNameEventTag: comicName},
+      );
+    }
   }
 }

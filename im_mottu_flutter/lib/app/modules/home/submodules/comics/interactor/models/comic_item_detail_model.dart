@@ -4,7 +4,7 @@ import '../../../../interactor/models/stories.dart';
 import '../../../../interactor/models/thumbnail.dart';
 import '../../../../interactor/models/url.dart';
 import 'characters_summary_model.dart';
-import 'creators_model.dart';
+import '../../../../interactor/models/creators_model.dart';
 import 'date_item.dart';
 import 'events_summary_model.dart';
 import 'price_item.dart';

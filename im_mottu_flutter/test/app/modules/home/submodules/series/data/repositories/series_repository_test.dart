@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:im_mottu_flutter/app/modules/home/submodules/comics/data/repositories/comics_repository.dart';
-import 'package:im_mottu_flutter/app/modules/home/submodules/comics/interactor/models/comic_item_detail_model.dart';
-import 'package:im_mottu_flutter/app/modules/home/submodules/comics/interactor/params/get_comics_details_params.dart';
-import 'package:im_mottu_flutter/app/modules/home/submodules/comics/interactor/repositories/i_comics_repository.dart';
+import 'package:im_mottu_flutter/app/modules/home/submodules/series/data/repositories/series_repository.dart';
+import 'package:im_mottu_flutter/app/modules/home/submodules/series/interactor/models/serie_item_detail_model.dart';
+import 'package:im_mottu_flutter/app/modules/home/submodules/series/interactor/params/get_series_details_params.dart';
+import 'package:im_mottu_flutter/app/modules/home/submodules/series/interactor/repositories/i_series_repository.dart';
 import 'package:im_mottu_flutter/app/shared/errors/datasource_error.dart';
 import 'package:im_mottu_flutter/app/shared/errors/http_client_error.dart';
 import 'package:im_mottu_flutter/app/shared/services/analytics/crashalytics_service.dart';
@@ -14,7 +14,7 @@ import 'package:im_mottu_flutter/app/shared/services/http_client/i_http_client.d
 import 'package:im_mottu_flutter/app/shared/services/local_storage/shared_preferences_service.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../comic_data.dart';
+import '../../serie_data.dart';
 
 class HttpClientMock extends Mock implements IHttpClient {}
 
@@ -27,7 +27,7 @@ class CrashAlyticsMock extends Mock implements ICrashlyticsService {}
 class StackTraceFake extends Fake implements StackTrace {}
 
 main() {
-  late final IComicsRepository repository;
+  late final ISeriesRepository repository;
   late final IHttpClient httpClient;
   late final ICheckConnectivityService connectivityService;
   late final ISharedPreferencesService storage;
@@ -38,18 +38,18 @@ main() {
     connectivityService = CheckConnectivityMock();
     storage = StorageMock();
     crashlyticsService = CrashAlyticsMock();
-    repository = ComicsRepository(httpClient, connectivityService, storage, crashlyticsService);
+    repository = SeriesRepository(httpClient, connectivityService, storage, crashlyticsService);
 
     registerFallbackValue(StackTraceFake());
 
     when(() => crashlyticsService.recordError(any(), any())).thenAnswer((_) async => true);
   });
 
-  group('Get comic', () {
-    test('Must return a ComicItemDetailModel when http client return response with success', () async {
+  group('Get serie', () {
+    test('Must return a SerieItemDetailModel when http client return response with success', () async {
       // mock
       when(() => httpClient.get(any(), params: any(named: 'params')))
-          .thenAnswer((_) async => HttpResponse(data: jsonDecode(apiComicFullResponseJson), statusCode: 200));
+          .thenAnswer((_) async => HttpResponse(data: jsonDecode(apiSerieFullResponseJson), statusCode: 200));
 
       when(() => connectivityService.checkConnectivitySnapshot).thenReturn(true);
 
@@ -57,33 +57,33 @@ main() {
 
       // act
       final result = await repository
-          .getComicDetails(GetComicsDetailsParams(resourceUrl: 'http://gateway.marvel.com/v1/public/comics/21366'));
+          .getSerieDetails(GetSeriesDetailsParams(resourceUrl: 'http://gateway.marvel.com/v1/public/series/21366'));
 
       // assert
-      expect(result.$1, isA<ComicItemDetailModel>());
-      expect(result.$1?.characters?.items?.isNotEmpty, true);
+      expect(result.$1, isA<SerieItemDetailModel>());
+      expect(result.$1?.characters?.items.isNotEmpty, true);
       expect(result.$2.isEmpty, true);
     });
 
-    test('Must return a ComicItemDetailModel when local storage return response with success', () async {
+    test('Must return a SerieItemDetailModel when local storage return response with success', () async {
       // mock
       when(() => httpClient.get(any(), params: any(named: 'params')))
-          .thenAnswer((_) async => HttpResponse(data: jsonDecode(apiComicFullResponseJson), statusCode: 200));
+          .thenAnswer((_) async => HttpResponse(data: jsonDecode(apiSerieFullResponseJson), statusCode: 200));
 
       when(() => connectivityService.checkConnectivitySnapshot).thenReturn(false);
 
       when(() => storage.readCacheMap(
             key: any(named: 'key'),
-          )).thenAnswer((_) async => jsonDecode(apiComicFullResponseJson));
+          )).thenAnswer((_) async => jsonDecode(apiSerieFullResponseJson));
 
       // act
       final result = await repository
-          .getComicDetails(GetComicsDetailsParams(resourceUrl: 'http://gateway.marvel.com/v1/public/comics/21366'));
+          .getSerieDetails(GetSeriesDetailsParams(resourceUrl: 'http://gateway.marvel.com/v1/public/series/21366'));
 
       // assert
       verifyNever(() => httpClient.get(''));
-      expect(result.$1, isA<ComicItemDetailModel>());
-      expect(result.$1?.characters?.items?.isNotEmpty, true);
+      expect(result.$1, isA<SerieItemDetailModel>());
+      expect(result.$1?.characters?.items.isNotEmpty, true);
       expect(result.$2.isEmpty, true);
     });
 
@@ -98,7 +98,7 @@ main() {
 
       // act
       final result = await repository
-          .getComicDetails(GetComicsDetailsParams(resourceUrl: 'http://gateway.marvel.com/v1/public/comics/21366'));
+          .getSerieDetails(GetSeriesDetailsParams(resourceUrl: 'http://gateway.marvel.com/v1/public/series/21366'));
 
       // assert
       verifyNever(() => storage.saveCacheMap(key: 'key', data: {}));
@@ -109,7 +109,7 @@ main() {
     test('Must return a empty list of AssetsModel when local storage throws a error', () async {
       // mock
       when(() => httpClient.get(any(), params: any(named: 'params')))
-          .thenAnswer((_) async => HttpResponse(data: jsonDecode(apiComicFullResponseJson), statusCode: 200));
+          .thenAnswer((_) async => HttpResponse(data: jsonDecode(apiSerieFullResponseJson), statusCode: 200));
 
       when(() => connectivityService.checkConnectivitySnapshot).thenReturn(false);
 
@@ -118,7 +118,7 @@ main() {
 
       // act
       final result = await repository
-          .getComicDetails(GetComicsDetailsParams(resourceUrl: 'http://gateway.marvel.com/v1/public/comics/21366'));
+          .getSerieDetails(GetSeriesDetailsParams(resourceUrl: 'http://gateway.marvel.com/v1/public/series/21366'));
 
       // assert
       verifyNever(() => httpClient.get(''));
