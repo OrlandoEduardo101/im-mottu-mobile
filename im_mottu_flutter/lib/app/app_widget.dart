@@ -26,15 +26,16 @@ class _AppWidgetState extends State<AppWidget> with WidgetsBindingObserver {
     super.initState();
     appStore.initCheckConnectivity();
     appStore.getThemeApp();
-    themeStore.addListener(() {
-      appStore.updateTheme(themeStore.value);
-    });
+    themeStore.addListener(listenerTheme);
     WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     appStore.cancelConnectivitySubscription();
+    themeStore.removeListener(listenerTheme);
+    appStore.dispose();
+    themeStore.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -46,6 +47,10 @@ class _AppWidgetState extends State<AppWidget> with WidgetsBindingObserver {
       await themeStore.clearCache();
     }
     super.didChangeAppLifecycleState(state);
+  }
+
+  void listenerTheme() {
+    appStore.updateTheme(themeStore.value);
   }
 
   @override

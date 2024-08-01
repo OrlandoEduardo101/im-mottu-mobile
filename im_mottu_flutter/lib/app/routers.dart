@@ -10,6 +10,8 @@ import 'modules/home/submodules/comics/presentation/comic_page.dart';
 import 'modules/home/submodules/series/interactor/stores/serie_store.dart';
 import 'modules/home/submodules/series/presentation/serie_page.dart';
 import 'modules/splash/splash_page.dart';
+import 'shared/services/analytics/analytics_route_observer.dart';
+import 'shared/services/analytics/analytics_service.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -17,6 +19,7 @@ class Routers {
   static final GoRouter router = GoRouter(
     initialLocation: '/splash',
     navigatorKey: _rootNavigatorKey,
+    observers: [AnalyticsRouteObserver(analyticsService: injector.get<IAnalyticsService>())],
     routes: [
       GoRoute(
         path: '/splash',
